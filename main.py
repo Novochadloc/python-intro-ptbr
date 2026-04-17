@@ -1,8 +1,6 @@
-﻿import json
-import os
+import json
 from datetime import datetime
 from pathlib import Path
-
 
 class TaskManager:
     def __init__(self, filename="tasks.json"):
@@ -20,22 +18,13 @@ class TaskManager:
             json.dump(self.tasks, f, indent=2)
 
     def add_task(self, title, description=""):
-        task = {
-            "id": len(self.tasks) + 1,
-            "title": title,
-            "description": description,
-            "completed": False,
-            "created_at": datetime.now().isoformat(),
-            "completed_at": None
-        }
+        task = {"id": len(self.tasks) + 1, "title": title, "description": description, "completed": False, "created_at": datetime.now().isoformat(), "completed_at": None}
         self.tasks.append(task)
         self._save_tasks()
         return task
 
     def list_tasks(self, show_completed=False):
-        if show_completed:
-            return self.tasks
-        return [t for t in self.tasks if not t["completed"]]
+        return self.tasks if show_completed else [t for t in self.tasks if not t["completed"]]
 
     def complete_task(self, task_id):
         for task in self.tasks:
@@ -56,87 +45,11 @@ class TaskManager:
                 return task
         return None
 
-    def update_task(self, task_id, title=None, description=None):
-        task = self.get_task(task_id)
-        if task:
-            if title:
-                task["title"] = title
-            if description:
-                task["description"] = description
-            self._save_tasks()
-            return task
-        return None
-
     def get_stats(self):
         total = len(self.tasks)
         completed = len([t for t in self.tasks if t["completed"]])
         pending = total - completed
-        return {
-            "total": total,
-            "completed": completed,
-            "pending": pending,
-            "completion_rate": (completed / total * 100) if total > 0 else 0
-        }
-
-
-def main():
-    manager = TaskManager()
-    
-    while True:
-        print("\n=== Gerenciador de Tarefas ===")
-        print("1. Adicionar tarefa")
-        print("2. Listar tarefas")
-        print("3. Marcar como concluída")
-        print("4. Deletar tarefa")
-        print("5. Ver estatísticas")
-        print("6. Sair")
-        
-        choice = input("\nEscolha uma opção: ").strip()
-        
-        if choice == "1":
-            title = input("Título da tarefa: ").strip()
-            description = input("Descrição (opcional): ").strip()
-            task = manager.add_task(title, description)
-            print(f"✓ Tarefa adicionada: {task['title']}")
-        
-        elif choice == "2":
-            tasks = manager.list_tasks()
-            if tasks:
-                for task in tasks:
-                    status = "✓" if task["completed"] else "○"
-                    print(f"{status} [{task['id']}] {task['title']}")
-                    if task['description']:
-                        print(f"   {task['description']}")
-            else:
-                print("Nenhuma tarefa pendente.")
-        
-        elif choice == "3":
-            task_id = int(input("ID da tarefa: "))
-            completed = manager.complete_task(task_id)
-            if completed:
-                print(f"✓ Tarefa '{completed['title']}' marcada como concluída")
-            else:
-                print("Tarefa não encontrada")
-        
-        elif choice == "4":
-            task_id = int(input("ID da tarefa: "))
-            manager.delete_task(task_id)
-            print("✓ Tarefa deletada")
-        
-        elif choice == "5":
-            stats = manager.get_stats()
-            print(f"\nTotal de tarefas: {stats['total']}")
-            print(f"Concluídas: {stats['completed']}")
-            print(f"Pendentes: {stats['pending']}")
-            print(f"Taxa de conclusão: {stats['completion_rate']:.1f}%")
-        
-        elif choice == "6":
-            print("Até logo!")
-            break
-        
-        else:
-            print("Opção inválida")
-
+        return {"total": total, "completed": completed, "pending": pending, "completion_rate": (completed / total * 100) if total > 0 else 0}
 
 if __name__ == "__main__":
-    main()
+    print("Task Manager Ready")
