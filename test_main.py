@@ -51,3 +51,36 @@ def test_get_stats(manager):
     assert stats["total"] == 3
     assert stats["completed"] == 1
     assert stats["pending"] == 2
+
+def test_add_multiple_tasks(manager):
+    task1 = manager.add_task("Task A", "Description A")
+    task2 = manager.add_task("Task B", "Description B")
+    task3 = manager.add_task("Task C", "Description C")
+    assert task1["id"] == 1
+    assert task2["id"] == 2
+    assert task3["id"] == 3
+    assert len(manager.list_tasks()) == 3
+
+def test_complete_nonexistent_task(manager):
+    result = manager.complete_task(999)
+    assert result is None
+
+def test_delete_nonexistent_task(manager):
+    manager.add_task("Task 1")
+    result = manager.delete_task(999)
+    assert result is None
+    assert len(manager.list_tasks(show_completed=True)) == 1
+
+def test_list_tasks_empty(manager):
+    tasks = manager.list_tasks()
+    assert len(tasks) == 0
+    assert tasks == []
+
+def test_task_timestamps(manager):
+    task = manager.add_task("Time Task")
+    assert "created_at" in task
+    assert task["created_at"] is not None
+    completed = manager.complete_task(task["id"])
+    assert "completed_at" in completed
+    assert completed["completed_at"] is not None
+
