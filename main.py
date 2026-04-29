@@ -18,13 +18,22 @@ class TaskManager:
             json.dump(self.tasks, f, indent=2)
 
     def add_task(self, title, description=""):
-        task = {"id": len(self.tasks) + 1, "title": title, "description": description, "completed": False, "created_at": datetime.now().isoformat(), "completed_at": None}
+        task = {
+            "id": len(self.tasks) + 1,
+            "title": title,
+            "description": description,
+            "completed": False,
+            "created_at": datetime.now().isoformat(),
+            "completed_at": None
+        }
         self.tasks.append(task)
         self._save_tasks()
         return task
 
     def list_tasks(self, show_completed=False):
-        return self.tasks if show_completed else [t for t in self.tasks if not t["completed"]]
+        if show_completed:
+            return self.tasks
+        return [t for t in self.tasks if not t["completed"]]
 
     def complete_task(self, task_id):
         for task in self.tasks:
@@ -49,7 +58,14 @@ class TaskManager:
         total = len(self.tasks)
         completed = len([t for t in self.tasks if t["completed"]])
         pending = total - completed
-        return {"total": total, "completed": completed, "pending": pending, "completion_rate": (completed / total * 100) if total > 0 else 0}
+        completion_rate = (completed / total * 100) if total > 0 else 0
+        return {
+            "total": total,
+            "completed": completed,
+            "pending": pending,
+            "completion_rate": completion_rate
+        }
 
 if __name__ == "__main__":
     print("Task Manager Ready")
+
