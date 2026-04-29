@@ -53,3 +53,8 @@ class TaskManager:
 
 if __name__ == "__main__":
     print("Task Manager Ready")
+
+git add main.py
+git commit -m "Melhorias no gerenciador de tarefas"
+git push origin feature/testes-adicionais
+
