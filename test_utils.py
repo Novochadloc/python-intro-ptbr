@@ -13,7 +13,7 @@ def test_validate_email():
 
 def test_format_date():
     date = "2026-09-25T14:30:00"
-    assert format_date(date) == "resultado errado"
+    assert format_date(date) == "25/09/2026 14:30"
 
 
 def test_format_date_with_invalid_value():
